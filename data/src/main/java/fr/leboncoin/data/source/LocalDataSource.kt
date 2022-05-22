@@ -15,11 +15,9 @@ class LocalDataSource @Inject constructor(context: Context) : TitleDataSource, L
         context, AlbumsDatabase::class.java
     ).build()
 
-    override suspend fun fetchTitles(): Flow<TitleEntity> {
+    override suspend fun fetchTitles(): Flow<List<TitleEntity>> {
         return flow {
-            db.getTilesDao().getEveryTitles().onEach {
-                emit(it)
-            }
+            emit(db.getTilesDao().getEveryTitles())
         }
     }
 

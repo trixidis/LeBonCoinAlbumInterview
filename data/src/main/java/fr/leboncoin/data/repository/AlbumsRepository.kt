@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlbumsRepository {
 
-    suspend fun getTitles(): Flow<Result<TitleEntity>>
+    suspend fun getTitles(): Flow<Result<List<TitleEntity>>>
 }

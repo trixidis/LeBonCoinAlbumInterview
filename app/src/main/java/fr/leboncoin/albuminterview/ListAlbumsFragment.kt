@@ -1,18 +1,18 @@
 package fr.leboncoin.albuminterview
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import fr.leboncoin.presentation.AlbumListViewModel
+import fr.leboncoin.presentation.ui.TitlesUiState
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val TAG = "FragmentDisplayTitles"
 
 @AndroidEntryPoint
 class ListAlbumsFragment : Fragment() {
@@ -28,5 +28,21 @@ class ListAlbumsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_list_albums, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenResumed {
+            viewModel.titlesFlow.collect{
+                when(it){
+                    is TitlesUiState.Error -> TODO()
+                    is TitlesUiState.Loading -> print("loading")
+                    is TitlesUiState.Success -> Log.d(TAG,"on a un nouveau title qui vient d'arriver ${it.titles.count()}")
+                }
+
+                //react to ui state change
+
+                //TODO : give it to the list
+            }
+        }
+    }
 
 }

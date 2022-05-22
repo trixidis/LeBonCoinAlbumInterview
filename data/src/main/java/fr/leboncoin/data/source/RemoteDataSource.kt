@@ -11,11 +11,9 @@ import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val albumService: AlbumService) : TitleDataSource {
 
-    override suspend fun fetchTitles(): Flow<TitleEntity> {
+    override suspend fun fetchTitles(): Flow<List<TitleEntity>> {
         return flow {
-            albumService.getAlbums().map {
-                emit(it)
-            }
+            emit(albumService.getAlbums())
         }
     }
 

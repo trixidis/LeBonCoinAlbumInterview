@@ -34,7 +34,7 @@ class RemoteDataSourceTest {
     private val api = Retrofit.Builder()
         .baseUrl(mockWebServer.url("/"))
         .client(client)
-        .addConverterFactory(defaultConverter(true))
+        .addConverterFactory(defaultConverter())
         .build()
         .create(AlbumService::class.java)
 

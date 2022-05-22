@@ -57,7 +57,7 @@ class AlbumsRepositoryTest{
             val actual = mutableListOf<TitleEntity>()
             repo.getTitles().collect{
                 actual
-                    .add(it)
+                    .add(it.getOrThrow())
             }
             assertNotNull(actual)
 

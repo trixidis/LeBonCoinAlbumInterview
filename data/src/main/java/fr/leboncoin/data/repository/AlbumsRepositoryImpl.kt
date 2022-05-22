@@ -13,12 +13,14 @@ class AlbumsRepositoryImpl @Inject constructor(
     private val monitor: NetworkMonitor
 ) : AlbumsRepository {
 
-    override suspend fun getTitles(): Flow<Result<TitleEntity>> {
+    override suspend fun getTitles(): Flow<Result<List<TitleEntity>>> {
         return if (monitor.hasNetwork()) {
             remoteDataSource.fetchTitles()
-                .onEach { title ->
-                    if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
-                        localDataSource.addTitleToLocalStorage(title)
+                .onEach { titles ->
+                    titles.forEach {title->
+                        if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
+                            localDataSource.addTitleToLocalStorage(title)
+                        }
                     }
                 }.map {
                     Result.success(it)
