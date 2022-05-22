@@ -1,10 +1,10 @@
-package fr.leboncoin.data.repository
+package fr.leboncoin.data.source
 
 import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity
 import kotlinx.coroutines.flow.Flow
 
-interface AlbumsRepository {
+interface AlbumDataSource {
 
-    suspend fun getAlbums(): Flow<Result<List<AlbumEntitiy>>>
+    fun fetchAlbums() : Flow<List<AlbumEntitiy>>
 }

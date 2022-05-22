@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import fr.leboncoin.presentation.AlbumListViewModel
-import fr.leboncoin.presentation.ui.TitlesUiState
+import fr.leboncoin.presentation.ui.AlbumUiState
 
 private const val TAG = "FragmentDisplayTitles"
 
@@ -31,11 +31,11 @@ class ListAlbumsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenResumed {
-            viewModel.titlesFlow.collect{
+            viewModel.albumsFlow.collect{
                 when(it){
-                    is TitlesUiState.Error -> TODO()
-                    is TitlesUiState.Loading -> print("loading")
-                    is TitlesUiState.Success -> Log.d(TAG,"on a un nouveau title qui vient d'arriver ${it.titles.count()}")
+                    is AlbumUiState.Error -> TODO()
+                    is AlbumUiState.Loading -> print("loading")
+                    is AlbumUiState.Success -> Log.d(TAG,"on a un nouveau title qui vient d'arriver ${it.titles.count()}")
                 }
 
                 //react to ui state change

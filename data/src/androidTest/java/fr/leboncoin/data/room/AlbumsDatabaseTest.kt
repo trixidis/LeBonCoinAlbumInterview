@@ -25,7 +25,7 @@ class AlbumsDatabaseTest {
         db = Room.inMemoryDatabaseBuilder(
             context, AlbumsDatabase::class.java
         ).build()
-        titlesDao = db.getTilesDao()
+        titlesDao = db.getTitlesDao()
     }
 
 

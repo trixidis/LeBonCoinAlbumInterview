@@ -12,7 +12,7 @@ interface TitleDao {
     @Insert
     suspend fun addTitle(title: TitleEntity)
 
-    @Query("SELECT * FROM Titles LIMIT 20")
+    @Query("SELECT * FROM Titles")
     suspend fun getEveryTitles(): List<TitleEntity>
 
     @Query("SELECT * FROM Titles WHERE id = :titleId")

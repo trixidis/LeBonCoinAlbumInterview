@@ -2,39 +2,38 @@ package fr.leboncoin.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.Binds
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.leboncoin.domain.use_cases.UseCaseDisplayTitles
-import fr.leboncoin.presentation.model.TitleUiModel
-import fr.leboncoin.presentation.ui.TitlesUiState
+import fr.leboncoin.domain.use_cases.UseCaseDisplayAlbums
+import fr.leboncoin.presentation.model.AlbumUiModel
+import fr.leboncoin.presentation.ui.AlbumUiState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AlbumListViewModel @Inject constructor(private val useCase: UseCaseDisplayTitles) :
+class AlbumListViewModel @Inject constructor(private val useCase: UseCaseDisplayAlbums) :
     ViewModel() {
 
-    private val _uiState = MutableStateFlow(TitlesUiState.Success(emptyList()))
-    val titlesFlow: StateFlow<TitlesUiState> = _uiState.stateIn(
-        initialValue = TitlesUiState.Loading(),
+    private val _uiState = MutableStateFlow(AlbumUiState.Success(emptyList()))
+    val albumsFlow: StateFlow<AlbumUiState> = _uiState.stateIn(
+        initialValue = AlbumUiState.Loading(),
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000)
     )
 
     init {
         viewModelScope.launch {
-            useCase.getTitles().filter {
+            useCase.getAlbums().filter {
                 it.getOrNull() != null
             }.map {
                 it.getOrNull()
             }.filterNotNull()
                 .map {
                     it.map {
-                        TitleUiModel(it.title)
+                        AlbumUiModel(it.id)
                     }
                 }.collect {
-                    _uiState.value = TitlesUiState.Success(
+                    _uiState.value = AlbumUiState.Success(
                         it
                     )
                 }

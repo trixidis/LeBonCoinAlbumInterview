@@ -3,12 +3,11 @@ package fr.leboncoin.data.repository
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import fr.leboncoin.data.di.NetworkModule
+import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity
 import fr.leboncoin.data.source.LocalDataSource
 import fr.leboncoin.data.source.RemoteDataSource
-import fr.leboncoin.data.source.TitleDataSource
 import fr.leboncoin.data.utils.NetworkMonitor
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.After
@@ -52,17 +51,17 @@ class AlbumsRepositoryTest{
     }
 
     @Test
-    fun giveTitles(){
+    fun giveAlbums(){
         runBlocking {
-            val actual = mutableListOf<TitleEntity>()
-            repo.getTitles().collect{
+            val actual = mutableListOf<AlbumEntitiy>()
+            repo.getAlbums().collect{
                 actual
-                    .add(it.getOrThrow())
+                    .addAll(it.getOrThrow())
             }
             assertNotNull(actual)
 
             //Assuming that this a static json that wont change for the purpose of the exercise
-            assert(actual.count()==5000)
+            assert(actual.count()==100)
         }
     }
 }

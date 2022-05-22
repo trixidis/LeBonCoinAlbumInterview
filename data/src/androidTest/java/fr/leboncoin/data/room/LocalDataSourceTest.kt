@@ -29,10 +29,8 @@ class LocalDataSourceTest() {
     @Test
      fun shouldGiveNothingFromLocal(){
         runBlocking {
-            val actual = mutableListOf<TitleEntity>()
-            source.fetchTitles().collect{
-                actual.add(it)
-            }
+            var actual = listOf<TitleEntity>()
+            actual = source.fetchTitles()
             MatcherAssert.assertThat("should be empty",actual.isEmpty())
         }
     }

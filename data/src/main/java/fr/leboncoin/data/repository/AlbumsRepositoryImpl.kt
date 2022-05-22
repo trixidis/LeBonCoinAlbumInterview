@@ -1,11 +1,13 @@
 package fr.leboncoin.data.repository
 
+import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity
 import fr.leboncoin.data.source.LocalDataSource
 import fr.leboncoin.data.source.RemoteDataSource
 import fr.leboncoin.data.utils.NetworkMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class AlbumsRepositoryImpl @Inject constructor(
@@ -13,25 +15,24 @@ class AlbumsRepositoryImpl @Inject constructor(
     private val monitor: NetworkMonitor
 ) : AlbumsRepository {
 
-    override suspend fun getTitles(): Flow<Result<List<TitleEntity>>> {
-        return if (monitor.hasNetwork()) {
-            remoteDataSource.fetchTitles()
-                .onEach { titles ->
-                    titles.forEach {title->
-                        if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
-                            localDataSource.addTitleToLocalStorage(title)
-                        }
-                    }
-                }.map {
-                    Result.success(it)
-                }.catch { emit(Result.failure(it)) }
-                .flowOn(Dispatchers.IO)
-        } else {
-            remoteDataSource.fetchTitles().map {
-                Result.success(it)
-            }.catch { emit(Result.failure(it)) }
-                .flowOn(Dispatchers.IO)
-        }
+    override suspend fun getAlbums(): Flow<Result<List<AlbumEntitiy>>> {
+
+        remoteDataSource.fetchTitles()
+            .forEach { title ->
+                if (!localDataSource.isAlbumAlreadyPresentOnStorage(title.albumId)) {
+                    localDataSource.addAlbumToLocalStorage(AlbumEntitiy(title.albumId))
+                }
+                if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
+                    localDataSource.addTitleToLocalStorage(title)
+                }
+            }
+
+
+        return localDataSource.fetchAlbums().map {
+            Result.success(it)
+        }.catch { emit(Result.failure(it)) }
+            .flowOn(Dispatchers.IO)
+
     }
 
 
