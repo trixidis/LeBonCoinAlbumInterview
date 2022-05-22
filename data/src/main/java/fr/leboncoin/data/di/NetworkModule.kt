@@ -1,12 +1,13 @@
 package fr.leboncoin.data.di
 
+import androidx.test.core.app.ApplicationProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.internal.managers.ApplicationComponentManager
 import dagger.hilt.components.SingletonComponent
-import fr.leboncoin.data.BuildConfig
-import fr.leboncoin.data.Config
+import fr.leboncoin.data.utils.Config
+import fr.leboncoin.data.network.AlbumService
+import fr.leboncoin.data.source.LocalDataSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,15 +23,21 @@ object NetworkModule {
     fun provideHTTPLoggingInterceptor(): HttpLoggingInterceptor {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        return interceptor;
+        return interceptor
     }
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideAlbumService(okHttpClient: OkHttpClient): AlbumService {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
+            .create(AlbumService::class.java)
+    }
+
+    @Provides
+    fun provideLocalDataSource():LocalDataSource {
+        return LocalDataSource(ApplicationProvider.getApplicationContext())
     }
 }

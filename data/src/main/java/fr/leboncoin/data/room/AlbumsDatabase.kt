@@ -9,7 +9,7 @@ import fr.leboncoin.data.entity.TitleEntity
 @Database(entities = [TitleEntity::class], version = 1)
 abstract class AlbumsDatabase : RoomDatabase() {
 
-    abstract fun getSpendDao(): TitleDao
+    abstract fun getTilesDao(): TitleDao
 
     companion object {
         private const val DB_NAME = "Albums-Database.db"

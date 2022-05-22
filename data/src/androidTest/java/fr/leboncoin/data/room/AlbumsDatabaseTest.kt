@@ -5,11 +5,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import fr.leboncoin.data.entity.TitleEntity
-import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 
 import org.junit.Test
@@ -27,7 +25,7 @@ class AlbumsDatabaseTest {
         db = Room.inMemoryDatabaseBuilder(
             context, AlbumsDatabase::class.java
         ).build()
-        titlesDao = db.getSpendDao()
+        titlesDao = db.getTilesDao()
     }
 
 
@@ -41,7 +39,7 @@ class AlbumsDatabaseTest {
             thumbnailUrl = "https://via.placeholder.com/150/771796"
         )
         titlesDao.addTitle(title)
-        val titles = titlesDao.getLast20Titles()
+        val titles = titlesDao.getEveryTitles()
         MatcherAssert.assertThat("item should be contained in list", titles.contains(title))
     }
 
@@ -56,7 +54,7 @@ class AlbumsDatabaseTest {
             thumbnailUrl = "https://via.placeholder.com/150/771796"
         )
 
-        val titles = titlesDao.getLast20Titles()
+        val titles = titlesDao.getEveryTitles()
         MatcherAssert.assertThat("item should not be  contained in list", !titles.contains(title))
     }
 
