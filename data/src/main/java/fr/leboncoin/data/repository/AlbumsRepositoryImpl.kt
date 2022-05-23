@@ -17,16 +17,26 @@ class AlbumsRepositoryImpl @Inject constructor(
 
     override suspend fun getAlbums(): Flow<Result<List<AlbumEntitiy>>> {
 
-        remoteDataSource.fetchTitles()
-            .forEach { title ->
-                if (!localDataSource.isAlbumAlreadyPresentOnStorage(title.albumId)) {
-                    localDataSource.addAlbumToLocalStorage(AlbumEntitiy(title.albumId))
+            remoteDataSource.fetchTitles()
+                .filter { it.isSuccess }
+                .map {
+                    it.getOrThrow()
+                }.map {
+                    it.onEach { title ->
+                        if (!localDataSource.isAlbumAlreadyPresentOnStorage(title.albumId)) {
+                            localDataSource.addAlbumToLocalStorage(AlbumEntitiy(title.albumId))
+                        }
+                        if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
+                            localDataSource.addTitleToLocalStorage(title)
+                        }
+                    }
                 }
-                if (!localDataSource.isTitleAlreadyPresentOnStorage(title.id)) {
-                    localDataSource.addTitleToLocalStorage(title)
+                .catch {
+                    throw  it
                 }
-            }
+                .collectLatest {
 
+                }
 
         return localDataSource.fetchAlbums().map {
             Result.success(it)

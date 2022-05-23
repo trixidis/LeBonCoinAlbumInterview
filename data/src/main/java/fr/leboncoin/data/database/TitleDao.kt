@@ -1,4 +1,4 @@
-package fr.leboncoin.data.room
+package fr.leboncoin.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete

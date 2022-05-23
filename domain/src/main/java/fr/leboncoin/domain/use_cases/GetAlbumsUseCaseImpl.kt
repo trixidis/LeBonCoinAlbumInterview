@@ -5,10 +5,10 @@ import fr.leboncoin.data.repository.AlbumsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DisplayAlbumsImpl @Inject constructor(private val repository: AlbumsRepository) :
-    UseCaseDisplayAlbums {
+class GetAlbumsUseCaseImpl @Inject constructor(private val repository: AlbumsRepository) :
+    GetAlbumsUseCase {
 
-    override suspend fun getAlbums(): Flow<Result<List<AlbumEntitiy>>> {
+    override suspend fun invoke(): Flow<Result<List<AlbumEntitiy>>> {
         return repository.getAlbums()
     }
 

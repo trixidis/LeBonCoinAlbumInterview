@@ -1,10 +1,11 @@
-package fr.leboncoin.data.room
+package fr.leboncoin.data.database
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import fr.leboncoin.data.entity.TitleEntity
 import fr.leboncoin.data.source.LocalDataSource
 import fr.leboncoin.data.source.TitleDataSource
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert
 import org.junit.After
@@ -29,8 +30,10 @@ class LocalDataSourceTest() {
     @Test
      fun shouldGiveNothingFromLocal(){
         runBlocking {
-            var actual = listOf<TitleEntity>()
-            actual = source.fetchTitles()
+            val actual = mutableListOf<TitleEntity>()
+            source.fetchTitles().collect{
+            actual.addAll(it.getOrThrow())
+            }
             MatcherAssert.assertThat("should be empty",actual.isEmpty())
         }
     }

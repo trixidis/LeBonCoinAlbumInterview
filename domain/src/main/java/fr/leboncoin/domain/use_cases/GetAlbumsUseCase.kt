@@ -4,8 +4,8 @@ import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity
 import kotlinx.coroutines.flow.Flow
 
-interface UseCaseDisplayAlbums {
+interface GetAlbumsUseCase {
 
-    suspend fun getAlbums() : Flow<Result<List<AlbumEntitiy>>>
+    suspend operator fun invoke() : Flow<Result<List<AlbumEntitiy>>>
 
 }

@@ -9,25 +9,36 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class RemoteDataSource @Inject constructor(private val albumService: AlbumService) : TitleDataSource {
+class RemoteDataSource @Inject constructor(private val albumService: AlbumService) :
+    TitleDataSource {
 
-    override suspend fun fetchTitles(): List<TitleEntity> {
-        return albumService.getAlbums()
+    override suspend fun fetchTitles(): Flow<Result<List<TitleEntity>>> {
 
+        return flow {
+            emit(
+                getResponse(
+                    request = { albumService.getAlbums() },
+                    defaultErrorMessage = "An error occured during the Album fetch"
+                )
+            )
+        }
     }
 
-//    private suspend fun <T> getResponse(request: suspend () -> Response<T>, defaultErrorMessage: String): Result<T> {
-//        return try {
-//            val result = request.invoke()
-//            if (result.isSuccessful && result.body() != null) {
-//                return Result.success(result.body()!!)
-//            } else {
-//                Result.failure(ApiErrorOperationException())
-//            }
-//        } catch (e: Throwable) {
-//            Result.failure( e)
-//        }
-//    }
+    private suspend fun <T> getResponse(
+        request: suspend () -> Response<T>,
+        defaultErrorMessage: String
+    ): Result<T> {
+        return try {
+            val result = request.invoke()
+            if (result.isSuccessful && result.body() != null) {
+                return Result.success(result.body()!!)
+            } else {
+                Result.failure(ApiErrorOperationException())
+            }
+        } catch (e: Throwable) {
+            Result.failure(e)
+        }
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package fr.leboncoin.data.room
+package fr.leboncoin.data.database
 
 import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity

@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface TitleDataSource {
 
-    suspend fun fetchTitles() : List<TitleEntity>
+    suspend fun fetchTitles() : Flow<Result<List<TitleEntity>>>
 
 }

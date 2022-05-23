@@ -1,4 +1,4 @@
-package fr.leboncoin.data.room
+package fr.leboncoin.data.database
 
 import android.content.Context
 import androidx.room.Room

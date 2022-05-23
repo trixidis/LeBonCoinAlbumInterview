@@ -4,20 +4,23 @@ import android.content.Context
 import androidx.room.Room
 import fr.leboncoin.data.entity.AlbumEntitiy
 import fr.leboncoin.data.entity.TitleEntity
-import fr.leboncoin.data.room.AlbumsDatabase
-import fr.leboncoin.data.room.LocalStorageFeature
+import fr.leboncoin.data.database.AlbumsDatabase
+import fr.leboncoin.data.database.LocalStorageFeature
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class LocalDataSource @Inject constructor(context: Context) : AlbumDataSource,TitleDataSource, LocalStorageFeature {
+class LocalDataSource @Inject constructor(context: Context) : AlbumDataSource, TitleDataSource,
+    LocalStorageFeature {
 
     private var db: AlbumsDatabase = Room.inMemoryDatabaseBuilder(
         context, AlbumsDatabase::class.java
     ).build()
 
-    override suspend fun fetchTitles(): List<TitleEntity> {
-            return db.getTitlesDao().getEveryTitles()
+    override suspend fun fetchTitles(): Flow<Result<List<TitleEntity>>> {
+        return flow {
+            emit(Result.success(db.getTitlesDao().getEveryTitles()))
+        }
     }
 
     override suspend fun isAlbumAlreadyPresentOnStorage(id: Int): Boolean {
