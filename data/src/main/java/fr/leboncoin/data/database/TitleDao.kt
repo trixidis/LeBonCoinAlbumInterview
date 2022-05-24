@@ -1,21 +1,18 @@
 package fr.leboncoin.data.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import fr.leboncoin.data.entity.TitleEntity
 
 @Dao
 interface TitleDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTitle(title: TitleEntity)
 
-    @Query("SELECT * FROM Titles")
+    @Query("SELECT * FROM titles")
     suspend fun getEveryTitles(): List<TitleEntity>
 
-    @Query("SELECT * FROM Titles WHERE id = :titleId")
+    @Query("SELECT * FROM titles WHERE id = :titleId")
     suspend fun getTitleWithId(titleId:Int): List<TitleEntity>
 
     @Delete

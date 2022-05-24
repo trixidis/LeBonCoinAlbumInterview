@@ -1,3 +1,7 @@
 package fr.leboncoin.presentation.model
 
-data class TitleUiModel(val name:String)
+data class TitleUiModel(
+    val name: String,
+    val url: String,
+    val thumbnailUrl: String
+)

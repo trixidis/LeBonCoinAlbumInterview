@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.leboncoin.domain.use_cases.GetAlbumsUseCase
 import fr.leboncoin.presentation.model.AlbumUiModel
+import fr.leboncoin.presentation.model.TitleUiModel
 import fr.leboncoin.presentation.ui.AlbumUiState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,14 +25,22 @@ class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAl
 
     init {
         viewModelScope.launch {
-            getAlbumsUseCase().filter {
-                it.isSuccess
-            }.map {
-                it.getOrNull()
-            }.filterNotNull()
+            getAlbumsUseCase()
+                .catch {
+                    throw it
+                }.filterNotNull()
+                .onEach {
+                    if (it.isFailure){
+                        _uiState.value = AlbumUiState.Error(it.exceptionOrNull())
+                    }
+                }
+                .filter { it.isSuccess }
+                .map {
+                    it.getOrThrow()
+                }
                 .map { listLAlbumsEntity ->
                     listLAlbumsEntity.map {
-                        AlbumUiModel(it.id)
+                        AlbumUiModel(it.album.id,it.titles.map { TitleUiModel(it.title,it.url,it.thumbnailUrl) })
                     }
                 }.map {
                     _uiState.value = AlbumUiState.Success(

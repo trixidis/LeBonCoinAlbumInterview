@@ -1,7 +1,10 @@
-package fr.leboncoin.albuminterview.ui
+package fr.leboncoin.albuminterview.ui.adapter.album
+
+import fr.leboncoin.albuminterview.ui.adapter.generic.ViewBindingAdapterItem
+import fr.leboncoin.presentation.model.AlbumUiModel
 
 class AlbumItem(
-    val id: Int
+    val album: AlbumUiModel
 ) : ViewBindingAdapterItem {
     override val itemViewType: Int
         get() = ItemAlbum.ALBUM_TYPE

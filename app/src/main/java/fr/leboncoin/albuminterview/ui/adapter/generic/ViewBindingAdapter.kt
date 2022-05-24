@@ -1,4 +1,4 @@
-package fr.leboncoin.albuminterview.ui
+package fr.leboncoin.albuminterview.ui.adapter.generic
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

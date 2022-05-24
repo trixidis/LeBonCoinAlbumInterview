@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 
-data class AlbumAndTitles(
+data class AlbumWithTitles(
 
     @Embedded
-     val album: AlbumEntitiy,
+     val album: AlbumEntity,
 
     @Relation(
         parentColumn = "id", entityColumn = "albumId"

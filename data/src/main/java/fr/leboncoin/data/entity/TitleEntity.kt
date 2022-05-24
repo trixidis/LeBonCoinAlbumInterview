@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity(
     tableName = "titles",
-    indices = [Index(value = ["albumId"])]
+    indices = [Index(value = ["albumId"]),Index(value = ["id"])]
 )
 data class TitleEntity(
     val albumId: Int,

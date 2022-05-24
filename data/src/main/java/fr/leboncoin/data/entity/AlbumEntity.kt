@@ -10,5 +10,5 @@ import kotlinx.serialization.Serializable
 @Entity(
     tableName = "albums",
 )
-data class AlbumEntitiy(@PrimaryKey val id: Int) {
+data class AlbumEntity(@PrimaryKey val id: Int) {
 }
