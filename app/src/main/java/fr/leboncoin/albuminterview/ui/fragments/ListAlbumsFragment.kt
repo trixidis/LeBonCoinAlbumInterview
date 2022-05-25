@@ -8,13 +8,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import fr.leboncoin.albuminterview.R
 import fr.leboncoin.albuminterview.databinding.FragmentListAlbumsBinding
 import fr.leboncoin.albuminterview.ui.adapter.album.AlbumAdapter
 import fr.leboncoin.albuminterview.ui.adapter.album.AlbumItem
+import fr.leboncoin.albuminterview.ui.adapter.album.OnAlbumClickListener
 import fr.leboncoin.albuminterview.ui.utils.Utils
 import fr.leboncoin.presentation.AlbumListViewModel
 import fr.leboncoin.presentation.ui.AlbumUiState
@@ -26,14 +30,13 @@ private const val DEFAULT_SPAN_COUNT = 3
 
 
 @AndroidEntryPoint
-class ListAlbumsFragment : Fragment() {
+class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
 
 
-    private val viewModel : AlbumListViewModel by viewModels()
+    private val viewModel: AlbumListViewModel by viewModels()
     private var _binding: FragmentListAlbumsBinding? = null
     private val binding get() = _binding!!
-    private val adapter = AlbumAdapter()
-
+    private val adapter = AlbumAdapter(this)
 
 
     override fun onCreateView(
@@ -41,7 +44,7 @@ class ListAlbumsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentListAlbumsBinding.inflate(inflater,container,false)
+        _binding = FragmentListAlbumsBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -60,21 +63,31 @@ class ListAlbumsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenResumed {
-            viewModel.albumsFlow.collectLatest{
-                when(it){
-                    is AlbumUiState.Error -> view?.let { it1 -> Snackbar.make(it1,
-                        R.string.error_common,Snackbar.LENGTH_LONG).show() }
+            viewModel.albumsFlow.collectLatest {
+                when (it) {
+                    is AlbumUiState.Error -> view?.let { it1 ->
+                        Snackbar.make(
+                            it1,
+                            R.string.error_common, Snackbar.LENGTH_LONG
+                        ).show()
+                    }
                     is AlbumUiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                     }
-                    is AlbumUiState.Success ->{
+                    is AlbumUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         adapter.submitList(it.albums.map { AlbumItem(it) })
-                        Log.d(TAG,"on a un nouvel album qui vient d'arriver ${it.albums.count()}")
+                        Log.d(TAG, "on a un nouvel album qui vient d'arriver ${it.albums.count()}")
                     }
                 }
             }
         }
+    }
+
+    override fun onclick(albumId: Int) {
+        val action =
+            ListAlbumsFragmentDirections.actionListAlbumsFragmentToListTitlesFragment(albumId)
+        binding.root.findNavController().navigate(action)
     }
 
 }

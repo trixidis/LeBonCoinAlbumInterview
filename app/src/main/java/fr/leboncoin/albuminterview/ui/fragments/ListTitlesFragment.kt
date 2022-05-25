@@ -1,36 +1,23 @@
 package fr.leboncoin.albuminterview.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import fr.leboncoin.albuminterview.R
-import fr.leboncoin.albuminterview.databinding.FragmentListAlbumsBinding
 import fr.leboncoin.albuminterview.databinding.FragmentListTitlesBinding
-import fr.leboncoin.albuminterview.ui.adapter.album.AlbumAdapter
-import fr.leboncoin.albuminterview.ui.adapter.album.AlbumItem
-import fr.leboncoin.albuminterview.ui.utils.Utils
-import fr.leboncoin.presentation.AlbumListViewModel
-import fr.leboncoin.presentation.ui.AlbumUiState
-import kotlinx.coroutines.flow.collectLatest
+import fr.leboncoin.albuminterview.ui.adapter.title.TitleAdapter
 
 @AndroidEntryPoint
-class ListTitlesFragment : DialogFragment() {
+class ListTitlesFragment : Fragment() {
 
 
     private var _binding: FragmentListTitlesBinding? = null
     private val binding get() = _binding!!
-    private val adapter = AlbumAdapter()
-
+    private val adapter = TitleAdapter()
 
 
     override fun onCreateView(
@@ -38,9 +25,8 @@ class ListTitlesFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentListTitlesBinding.inflate(inflater,container,false)
-        val view = binding.root
-        return view
+        _binding = FragmentListTitlesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
