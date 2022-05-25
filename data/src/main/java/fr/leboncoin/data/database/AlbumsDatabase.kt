@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import fr.leboncoin.data.entity.AlbumEntity
-import fr.leboncoin.data.entity.TitleEntity
+import fr.leboncoin.data.database.entity.AlbumEntity
+import fr.leboncoin.data.database.entity.TitleEntity
 
-@Database(entities = [TitleEntity::class,AlbumEntity::class], version = 4)
+@Database(entities = [TitleEntity::class,AlbumEntity::class], version = 5)
 abstract class AlbumsDatabase : RoomDatabase() {
 
     abstract fun getTitlesDao(): TitleDao

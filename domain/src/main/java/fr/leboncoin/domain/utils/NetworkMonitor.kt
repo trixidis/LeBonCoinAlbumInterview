@@ -1,4 +1,4 @@
-package fr.leboncoin.data.utils
+package fr.leboncoin.domain.utils
 
 interface NetworkMonitor {
 

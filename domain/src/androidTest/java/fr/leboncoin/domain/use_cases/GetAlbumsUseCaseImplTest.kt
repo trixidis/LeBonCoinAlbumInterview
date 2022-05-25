@@ -3,8 +3,9 @@ package fr.leboncoin.domain.use_cases
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import fr.leboncoin.data.di.NetworkModule
-import fr.leboncoin.data.entity.AlbumEntity
-import fr.leboncoin.data.entity.AlbumWithTitles
+import fr.leboncoin.data.database.entity.AlbumWithTitles
+import fr.leboncoin.domain.use_cases.get_all_albums.GetAlbumsUseCase
+import fr.leboncoin.domain.use_cases.get_all_albums.GetAlbumsUseCaseImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*

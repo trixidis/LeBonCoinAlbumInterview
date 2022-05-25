@@ -1,21 +1,18 @@
 package fr.leboncoin.data.di
 
-import android.app.Application
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import fr.leboncoin.data.database.AlbumsDatabase
 import fr.leboncoin.data.utils.Config
 import fr.leboncoin.data.network.AlbumService
 import fr.leboncoin.data.repository.AlbumsRepository
 import fr.leboncoin.data.repository.AlbumsRepositoryImpl
 import fr.leboncoin.data.source.LocalDataSource
 import fr.leboncoin.data.source.RemoteDataSource
-import fr.leboncoin.data.utils.NetworkMonitor
-import fr.leboncoin.data.utils.NetworkMonitorImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -47,7 +44,7 @@ object NetworkModule {
 
     @Provides
     fun provideHttpClient(): OkHttpClient {
-        return  OkHttpClient.Builder()
+        return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -56,24 +53,28 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideLocalDataSource(@ApplicationContext appContext: Context):LocalDataSource {
-        return LocalDataSource(appContext)
+    fun provideLocalDataSource(@ApplicationContext appContext: Context,albumsDatabase: AlbumsDatabase): LocalDataSource {
+        return LocalDataSource(appContext,albumsDatabase)
     }
 
     @Provides
-    fun provideRemoteDataSource():RemoteDataSource {
-        return RemoteDataSource(provideAlbumService(provideHttpClient()))
+    fun provideDataBase(@ApplicationContext appContext: Context): AlbumsDatabase {
+        return AlbumsDatabase.invoke(appContext)
     }
 
     @Provides
-    fun provideNetworkMonitor(@ApplicationContext appContext: Context):NetworkMonitor {
-        return NetworkMonitorImpl(appContext)
+    fun provideRemoteDataSource(albumService: AlbumService): RemoteDataSource {
+        return RemoteDataSource(albumService)
     }
 
+
     @Provides
-    fun provideAlbumsRepository(@ApplicationContext appContext: Context):AlbumsRepository {
-        return AlbumsRepositoryImpl(provideRemoteDataSource(), provideLocalDataSource(appContext),
-            provideNetworkMonitor(appContext))
+    fun provideAlbumsRepository(
+        remoteDataSource: RemoteDataSource, localDataSource: LocalDataSource
+    ): AlbumsRepository {
+        return AlbumsRepositoryImpl(
+            remoteDataSource, localDataSource
+        )
     }
 
 

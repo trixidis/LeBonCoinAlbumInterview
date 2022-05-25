@@ -1,4 +1,4 @@
-package fr.leboncoin.albuminterview
+package fr.leboncoin.albuminterview.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import fr.leboncoin.albuminterview.R
 import fr.leboncoin.albuminterview.databinding.FragmentListAlbumsBinding
 import fr.leboncoin.albuminterview.ui.adapter.album.AlbumAdapter
 import fr.leboncoin.albuminterview.ui.adapter.album.AlbumItem
@@ -61,7 +62,8 @@ class ListAlbumsFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.albumsFlow.collectLatest{
                 when(it){
-                    is AlbumUiState.Error -> view?.let { it1 -> Snackbar.make(it1,R.string.error_common,Snackbar.LENGTH_LONG).show() }
+                    is AlbumUiState.Error -> view?.let { it1 -> Snackbar.make(it1,
+                        R.string.error_common,Snackbar.LENGTH_LONG).show() }
                     is AlbumUiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                     }

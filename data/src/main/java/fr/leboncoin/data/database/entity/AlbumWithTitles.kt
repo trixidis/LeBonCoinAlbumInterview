@@ -1,4 +1,4 @@
-package fr.leboncoin.data.entity
+package fr.leboncoin.data.database.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
@@ -12,5 +12,5 @@ data class AlbumWithTitles(
     @Relation(
         parentColumn = "id", entityColumn = "albumId"
     )
-    val titles: List<TitleEntity>
+    val titles: MutableList<TitleEntity>
 )

@@ -1,6 +1,6 @@
 package fr.leboncoin.data.network
 
-import fr.leboncoin.data.entity.TitleEntity
+import fr.leboncoin.data.database.entity.TitleEntity
 import retrofit2.Response
 import retrofit2.http.GET
 

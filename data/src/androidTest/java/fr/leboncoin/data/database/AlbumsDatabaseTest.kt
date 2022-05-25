@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import fr.leboncoin.data.entity.TitleEntity
+import fr.leboncoin.data.database.entity.TitleEntity
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 
 import org.junit.Test
@@ -40,12 +41,13 @@ class AlbumsDatabaseTest {
         )
         titlesDao.addTitle(title)
         val titles = titlesDao.getEveryTitles()
-        MatcherAssert.assertThat("item should be contained in list", titles.contains(title))
+        Assert.assertTrue("item should be contained in list", titles.contains(title))
     }
 
 
     @Test
-    fun DontwriteAndReadTitleShouldThrow() = runBlocking {
+    fun DontwriteAndReadTitleShouldBeEmpty() = runBlocking {
+
         val title = TitleEntity(
             albumId = 30,
             id = 2,
@@ -55,7 +57,7 @@ class AlbumsDatabaseTest {
         )
 
         val titles = titlesDao.getEveryTitles()
-        MatcherAssert.assertThat("item should not be  contained in list", !titles.contains(title))
+        Assert.assertTrue("item should not be  contained in list", !titles.contains(title))
     }
 
     @After

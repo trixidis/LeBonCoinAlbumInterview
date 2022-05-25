@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
+import fr.leboncoin.albuminterview.ui.fragments.ListAlbumsFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

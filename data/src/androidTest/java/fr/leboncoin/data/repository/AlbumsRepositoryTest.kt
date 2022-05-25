@@ -1,13 +1,14 @@
 package fr.leboncoin.data.repository
 
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import fr.leboncoin.data.database.AlbumsDatabase
 import fr.leboncoin.data.di.NetworkModule
-import fr.leboncoin.data.entity.AlbumEntity
-import fr.leboncoin.data.entity.AlbumWithTitles
+import fr.leboncoin.data.database.entity.AlbumEntity
+import fr.leboncoin.data.database.entity.AlbumWithTitles
 import fr.leboncoin.data.source.LocalDataSource
 import fr.leboncoin.data.source.RemoteDataSource
-import fr.leboncoin.data.utils.NetworkMonitor
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.After
@@ -26,17 +27,16 @@ class AlbumsRepositoryTest{
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
     private val source = RemoteDataSource(NetworkModule.provideAlbumService(client))
-    private val localSource = LocalDataSource(ApplicationProvider.getApplicationContext())
-    private val fakeNetwork = object : NetworkMonitor{
-        override fun hasNetwork(): Boolean {
-            return true
-        }
 
-    }
+    private val db  = Room.inMemoryDatabaseBuilder(
+        ApplicationProvider.getApplicationContext(),
+        AlbumsDatabase::class.java
+    ).build()
+    private val localSource = LocalDataSource(ApplicationProvider.getApplicationContext(),db)
 
     @Before
     fun setUp(){
-        repo = AlbumsRepositoryImpl(remoteDataSource = source,localDataSource = localSource,monitor = fakeNetwork)
+        repo = AlbumsRepositoryImpl(remoteDataSource = source,localDataSource = localSource)
     }
 
     @After
@@ -53,8 +53,8 @@ class AlbumsRepositoryTest{
     @Test
     fun giveAlbums(){
         runBlocking {
-            val actual = mutableListOf<AlbumEntity>()
-            repo.getAlbums().collect{
+            val actual = mutableListOf<AlbumWithTitles>()
+            repo.remoteDataSource.fetchAlbumsWithTitles().collect{
                 actual
                     .addAll(it.getOrThrow())
             }
@@ -71,7 +71,7 @@ class AlbumsRepositoryTest{
     fun giveAlbumsAndTitles(){
         runBlocking {
             val actual = mutableListOf<AlbumWithTitles>()
-            repo.getAlbumsWithTitles().collect{
+            repo.remoteDataSource.fetchAlbumsWithTitles().collect{
                 actual
                     .addAll(it.getOrThrow())
             }

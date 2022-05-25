@@ -1,7 +1,7 @@
 package fr.leboncoin.data.database
 
 import androidx.room.*
-import fr.leboncoin.data.entity.TitleEntity
+import fr.leboncoin.data.database.entity.TitleEntity
 
 @Dao
 interface TitleDao {

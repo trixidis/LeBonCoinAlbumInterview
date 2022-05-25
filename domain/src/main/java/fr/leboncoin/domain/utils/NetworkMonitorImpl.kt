@@ -1,4 +1,4 @@
-package fr.leboncoin.data.utils
+package fr.leboncoin.domain.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -8,7 +8,7 @@ import android.net.NetworkRequest
 import javax.inject.Inject
 
 class NetworkMonitorImpl @Inject constructor(context: Context) :
-    ConnectivityManager.NetworkCallback(), NetworkMonitor {
+    ConnectivityManager.NetworkCallback(), fr.leboncoin.domain.utils.NetworkMonitor {
 
 
     private var mNetworkRequest: NetworkRequest = NetworkRequest.Builder()

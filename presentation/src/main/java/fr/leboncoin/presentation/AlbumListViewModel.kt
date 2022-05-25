@@ -3,7 +3,7 @@ package fr.leboncoin.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.leboncoin.domain.use_cases.GetAlbumsUseCase
+import fr.leboncoin.domain.use_cases.get_all_albums.GetAlbumsUseCase
 import fr.leboncoin.presentation.model.AlbumUiModel
 import fr.leboncoin.presentation.model.TitleUiModel
 import fr.leboncoin.presentation.ui.AlbumUiState
@@ -40,7 +40,7 @@ class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAl
                 }
                 .map { listLAlbumsEntity ->
                     listLAlbumsEntity.map {
-                        AlbumUiModel(it.album.id,it.titles.map { TitleUiModel(it.title,it.url,it.thumbnailUrl) })
+                        AlbumUiModel(it.album.id,it.titles.map { TitleUiModel(it.title,it.url,it.thumbnailUrl,it.id) })
                     }
                 }.map {
                     _uiState.value = AlbumUiState.Success(
