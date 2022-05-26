@@ -11,6 +11,7 @@ import fr.leboncoin.albuminterview.ui.adapter.generic.ViewBindingViewHolder
 import fr.leboncoin.albuminterview.ui.fragments.ListAlbumsFragmentDirections
 import fr.leboncoin.albuminterview.ui.fragments.ListTitlesFragment
 import fr.leboncoin.albuminterview.ui.fragments.ListTitlesFragmentArgs
+import fr.leboncoin.albuminterview.ui.utils.Utils
 
 
 class ItemAlbumViewHolder(binding: ItemAlbumBinding,val listener : OnAlbumClickListener) : ViewBindingViewHolder<AlbumItem, ItemAlbumBinding>(
@@ -21,16 +22,11 @@ class ItemAlbumViewHolder(binding: ItemAlbumBinding,val listener : OnAlbumClickL
         binding.cardView.setOnClickListener {
             //navigate to album details
             listener.onclick(item.album.id)
-            Log.d("nav","on va naviguer aux tittres de l'album ${item.album.titles}")
         }
-        val url = GlideUrl(
-            item.album.titles.first().url, LazyHeaders.Builder()
-                .addHeader("User-Agent", "Android")
-                .build()
-        )
+
         Glide
             .with(binding.root)
-            .load(url)
+            .load(Utils.getGlideUrl(item.album.titles.first().url))
             .placeholder(R.drawable.loading)
             .into(binding.imageView)
 

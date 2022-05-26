@@ -14,17 +14,21 @@ class AlbumsRepositoryImpl @Inject constructor(
 ) : AlbumsRepository {
 
     override suspend fun getAlbumsWithTitlesFromNetwork(): Flow<Result<List<AlbumWithTitles>>> =
-        remoteDataSource.fetchAlbumsWithTitles()
-            .onEach { albumsWithTitles ->
-                albumsWithTitles.getOrThrow().forEach { albumWithTitles ->
-                    localDataSource.addAlbumToLocalStorage(albumWithTitles.album)
-                    albumWithTitles.titles.forEach { title ->
-                        localDataSource.addTitleToLocalStorage(title)
+        flow {
+            remoteDataSource.fetchAlbumsWithTitles()
+                .onEach { albumsWithTitles ->
+                    emit(albumsWithTitles)
+                    albumsWithTitles.getOrThrow().forEach { albumWithTitles ->
+                        localDataSource.addAlbumToLocalStorage(albumWithTitles.album)
+                        albumWithTitles.titles.forEach { title ->
+                            localDataSource.addTitleToLocalStorage(title)
+                        }
                     }
-                }
-            }
-            .catch { emit(Result.failure(it)) }
+                }.collect()
+        } .catch { emit(Result.failure(it)) }
             .flowOn(Dispatchers.IO)
+
+
 
     override suspend fun getAlbumsWithTitlesFromLocal(): Flow<Result<List<AlbumWithTitles>>> =
         localDataSource.fetchAlbumsWithTitles()

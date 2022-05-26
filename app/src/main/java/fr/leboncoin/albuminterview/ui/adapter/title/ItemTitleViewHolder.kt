@@ -9,6 +9,7 @@ import fr.leboncoin.albuminterview.databinding.ItemAlbumBinding
 import fr.leboncoin.albuminterview.databinding.ItemTitleBinding
 import fr.leboncoin.albuminterview.ui.adapter.album.AlbumItem
 import fr.leboncoin.albuminterview.ui.adapter.generic.ViewBindingViewHolder
+import fr.leboncoin.albuminterview.ui.utils.Utils
 
 class ItemTitleViewHolder(binding: ItemTitleBinding) :
     ViewBindingViewHolder<TitleItem, ItemTitleBinding>(
@@ -16,16 +17,11 @@ class ItemTitleViewHolder(binding: ItemTitleBinding) :
     ) {
 
     override fun bind(item: TitleItem) {
-        binding.textViewTitle.text = item.title.name
+        binding.textViewTitle.text = "${item.title.id} \n ${item.title.name}"
         binding.imageViewTitle
-        val url = GlideUrl(
-            item.title.url, LazyHeaders.Builder()
-                .addHeader("User-Agent", "Android")
-                .build()
-        )
         Glide
             .with(binding.root)
-            .load(url)
+            .load(Utils.getGlideUrl(item.title.url))
             .placeholder(R.drawable.loading)
             .into(binding.imageViewTitle)
     }

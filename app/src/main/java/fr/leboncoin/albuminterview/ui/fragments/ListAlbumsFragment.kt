@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +28,7 @@ import fr.leboncoin.albuminterview.ui.utils.Utils
 import fr.leboncoin.presentation.AlbumListViewModel
 import fr.leboncoin.presentation.ui.AlbumUiState
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "FragmentDisplayTitles"
@@ -62,8 +68,9 @@ class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenResumed {
-            viewModel.albumsFlow.collectLatest {
+        lifecycleScope.launch {
+            viewModel.albumsFlow.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED)
+                .collect{
                 when (it) {
                     is AlbumUiState.Error -> view?.let { it1 ->
                         Snackbar.make(
@@ -72,12 +79,17 @@ class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
                         ).show()
                     }
                     is AlbumUiState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        binding.progressBar.visibility = VISIBLE
                     }
                     is AlbumUiState.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        adapter.submitList(it.albums.map { AlbumItem(it) })
-                        Log.d(TAG, "on a un nouvel album qui vient d'arriver ${it.albums.count()}")
+                        if(it.albums.isEmpty()){
+                            binding.emptyView.visibility = VISIBLE
+                        }else{
+                            binding.emptyView.visibility = GONE
+                            adapter.submitList(it.albums.map { AlbumItem(it) })
+                        }
+                        binding.progressBar.visibility = GONE
+
                     }
                 }
             }

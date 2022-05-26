@@ -5,19 +5,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import fr.leboncoin.albuminterview.R
 import fr.leboncoin.albuminterview.databinding.FragmentListTitlesBinding
 import fr.leboncoin.albuminterview.ui.adapter.title.TitleAdapter
+import fr.leboncoin.albuminterview.ui.adapter.title.TitleItem
+import fr.leboncoin.presentation.AlbumListViewModel
+import fr.leboncoin.presentation.model.TitleUiModel
+import fr.leboncoin.presentation.ui.AlbumUiState
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListTitlesFragment : Fragment() {
 
-
+    private val viewModel: AlbumListViewModel by viewModels()
     private var _binding: FragmentListTitlesBinding? = null
     private val binding get() = _binding!!
     private val adapter = TitleAdapter()
+    private val args: ListTitlesFragmentArgs by navArgs()
+
 
 
     override fun onCreateView(
@@ -40,21 +54,24 @@ class ListTitlesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenResumed {
-//            viewModel.albumsFlow.collectLatest{
-//                when(it){
-//                    is AlbumUiState.Error -> view?.let { it1 -> Snackbar.make(it1,
-//                        R.string.error_common, Snackbar.LENGTH_LONG).show() }
-//                    is AlbumUiState.Loading -> {
-//                        binding.progressBar.visibility = View.VISIBLE
-//                    }
-//                    is AlbumUiState.Success ->{
-//                        binding.progressBar.visibility = View.GONE
-//                        adapter.submitList(it.albums.map { AlbumItem(it) })
-//                        Log.d(TAG,"on a un nouvel album qui vient d'arriver ${it.albums.count()}")
-//                    }
-//                }
-//            }
+        lifecycleScope.launch {
+            viewModel.albumsFlow.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collectLatest {
+                when(it){
+                    is AlbumUiState.Error -> view?.let { it1 -> Snackbar.make(it1,
+                        R.string.error_common, Snackbar.LENGTH_LONG).show() }
+                    is AlbumUiState.Loading -> {
+                        binding.progressBarTitles.visibility = View.VISIBLE
+                    }
+                    is AlbumUiState.Success ->{
+                        binding.progressBarTitles.visibility = View.GONE
+                        adapter.submitList(it.albums.filter { it.id == args.idAlbum }.flatMap {
+                            it.titles
+                        }.map {
+                            TitleItem(it)
+                        })
+                    }
+                }
+            }
         }
     }
 }

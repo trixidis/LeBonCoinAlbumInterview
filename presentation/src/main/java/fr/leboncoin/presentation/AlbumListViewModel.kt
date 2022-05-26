@@ -30,7 +30,7 @@ class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAl
                     throw it
                 }.filterNotNull()
                 .onEach {
-                    if (it.isFailure){
+                    if (it.isFailure) {
                         _uiState.value = AlbumUiState.Error(it.exceptionOrNull())
                     }
                 }
@@ -39,8 +39,17 @@ class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAl
                     it.getOrThrow()
                 }
                 .map { listLAlbumsEntity ->
-                    listLAlbumsEntity.map {
-                        AlbumUiModel(it.album.id,it.titles.map { TitleUiModel(it.title,it.url,it.thumbnailUrl,it.id) })
+                    listLAlbumsEntity.map { albumWithTitles ->
+                        AlbumUiModel(
+                            albumWithTitles.album.id,
+                            albumWithTitles.titles.map {
+                                TitleUiModel(
+                                    it.title,
+                                    it.url,
+                                    it.thumbnailUrl,
+                                    it.id
+                                )
+                            })
                     }
                 }.map {
                     _uiState.value = AlbumUiState.Success(
