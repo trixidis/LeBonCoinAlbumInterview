@@ -1,7 +1,6 @@
 package fr.leboncoin.albuminterview.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -12,11 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import fr.leboncoin.albuminterview.R
@@ -27,11 +23,9 @@ import fr.leboncoin.albuminterview.ui.adapter.album.OnAlbumClickListener
 import fr.leboncoin.albuminterview.ui.utils.Utils
 import fr.leboncoin.presentation.AlbumListViewModel
 import fr.leboncoin.presentation.ui.AlbumUiState
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "FragmentDisplayTitles"
 private const val DEFAULT_SPAN_COUNT = 3
 
 
