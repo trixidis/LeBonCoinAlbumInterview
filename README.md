@@ -33,7 +33,7 @@ Layers
 	 - [x] Local 
  - [x] Domain
  - [ ] Presentation (problem testing the StateFlow in the ViewModel)
-- [ ]  App
+- [x]  App
 
 
 # Demo
