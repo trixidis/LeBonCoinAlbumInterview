@@ -1,45 +1,75 @@
 package fr.leboncoin.albuminterview.ui.fragments
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import android.os.Build
+import android.view.View
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.runner.AndroidJUnitRunner
+import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import fr.leboncoin.albuminterview.HiltTestActivity
 import fr.leboncoin.albuminterview.MainActivity
 import fr.leboncoin.albuminterview.R
-import fr.leboncoin.presentation.HiltTestRunner
-import org.hamcrest.Matchers
-import org.junit.Assert.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@SmallTest
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
-class ListAlbumsFragmentTest : HiltTestRunner() {
+class ListAlbumsFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+
     @get:Rule(order = 1)
-    var activityRule: ActivityScenarioRule<MainActivity> =
-        ActivityScenarioRule(MainActivity::class.java)
+    var activityRule: ActivityScenarioRule<HiltTestActivity> =
+        ActivityScenarioRule(HiltTestActivity::class.java)
+
+    @Before
+    fun setUp(){
+        hiltRule.inject()
+    }
 
     @Test
-    fun test_name_matches_data_source() {
-        // Inject the dependencies to the test (if there is any @Inject field in the test)
-        hiltRule.inject()
-        Espresso.onView(ViewMatchers.withId(R.id.empty_view))
-            .check(
-                ViewAssertions.matches(
-                    Matchers.allOf(
-                        ViewMatchers.isDisplayed(),
-                        ViewMatchers.withText(R.string.no_data_available)
-                    )
-                )
+    fun testEmptyViewIsOk() {
+        launchFragmentInHiltContainer<ListAlbumsFragment> {
+            assert(
+                this.view?.findViewById<TextView>(
+                    R.id.empty_view
+                )?.text.toString() == getString(R.string.no_data_available)
+
             )
+        }
+    }
+
+    @Test
+    fun recyclerViewNotVisibleWhenNoData() {
+        launchFragmentInHiltContainer<ListAlbumsFragment> {
+            Assert.assertEquals(View.GONE,this.view?.findViewById<RecyclerView>(
+                R.id.recyclerView
+            )?.visibility)
+        }
+    }
+
+    @Test
+    fun recyclerViewVisibleWhenData() {
+        launchFragmentInHiltContainer<ListAlbumsFragment> {
+            InstrumentationRegistry.getInstrumentation().waitForIdle {
+                Assert.assertEquals(View.VISIBLE,this.view?.findViewById<RecyclerView>(
+                    R.id.recyclerView
+                )?.visibility)
+            }
+
+        }
     }
 
 

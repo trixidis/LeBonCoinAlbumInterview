@@ -64,6 +64,7 @@ class ListTitlesFragment : Fragment() {
                     }
                     is AlbumUiState.Success ->{
                         binding.progressBarTitles.visibility = View.GONE
+                        binding.recyclerViewTitles.visibility = View.VISIBLE
                         adapter.submitList(it.albums.filter { it.id == args.idAlbum }.flatMap {
                             it.titles
                         }.map {

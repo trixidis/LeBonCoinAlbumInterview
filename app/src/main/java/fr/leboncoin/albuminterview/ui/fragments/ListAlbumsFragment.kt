@@ -26,12 +26,10 @@ import fr.leboncoin.presentation.ui.AlbumUiState
 import kotlinx.coroutines.launch
 
 
-private const val DEFAULT_SPAN_COUNT = 3
 
 
 @AndroidEntryPoint
 class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
-
 
     private val viewModel: AlbumListViewModel by viewModels()
     private var _binding: FragmentListAlbumsBinding? = null
@@ -56,7 +54,7 @@ class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
         // of the screen we set it or we set the default value
         binding.recyclerView.layoutManager = GridLayoutManager(
             context,
-            context?.let { Utils.calculateNoOfColumns(it) } ?: DEFAULT_SPAN_COUNT)
+            context?.let { Utils.calculateNoOfColumns(it) } ?: Companion.DEFAULT_SPAN_COUNT)
         binding.recyclerView.adapter = adapter
     }
 
@@ -80,6 +78,7 @@ class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
                             binding.emptyView.visibility = VISIBLE
                         }else{
                             binding.emptyView.visibility = GONE
+                            binding.recyclerView.visibility = VISIBLE
                             adapter.submitList(it.albums.map { AlbumItem(it) })
                         }
                         binding.progressBar.visibility = GONE
@@ -94,6 +93,10 @@ class ListAlbumsFragment : Fragment(), OnAlbumClickListener {
         val action =
             ListAlbumsFragmentDirections.actionListAlbumsFragmentToListTitlesFragment(albumId)
         binding.root.findNavController().navigate(action)
+    }
+
+    companion object {
+        private const val DEFAULT_SPAN_COUNT = 3
     }
 
 }

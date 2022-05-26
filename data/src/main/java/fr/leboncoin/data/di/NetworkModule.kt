@@ -34,6 +34,8 @@ object NetworkModule {
 
     @Provides
     fun provideAlbumService(okHttpClient: OkHttpClient): AlbumService {
+
+        okHttpClient
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())

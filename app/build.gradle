@@ -16,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "fr.leboncoin.albuminterview.HiltTestRunner"
     }
 
     buildFeatures {
@@ -62,6 +62,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    debugImplementation "androidx.fragment:fragment-testing:1.4.1"
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
+
+
+
 
 
     //Hilt
@@ -79,6 +84,8 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+
+    //Navigation
     def navigation_version = '2.2.0'
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"

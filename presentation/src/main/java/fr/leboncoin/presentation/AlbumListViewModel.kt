@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAlbumsUseCase) :
+open class AlbumListViewModel @Inject constructor(private val getAlbumsUseCase: GetAlbumsUseCase) :
     ViewModel() {
 
     private val _uiState = MutableStateFlow<AlbumUiState>(AlbumUiState.Loading())

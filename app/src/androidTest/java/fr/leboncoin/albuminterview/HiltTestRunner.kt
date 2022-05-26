@@ -1,4 +1,4 @@
-package fr.leboncoin.albuminterview.ui
+package fr.leboncoin.albuminterview
 
 import android.app.Application
 import android.content.Context
