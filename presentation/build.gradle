@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 32
+
+        testInstrumentationRunner "fr.leboncoin.presentation.HiltTestRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    sourceSets {
+        test {
+            java.srcDirs += "$projectDir/src/testShared"
+        }
+        androidTest {
+            java.srcDirs += "$projectDir/src/testShared"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+
+hilt{
+    enableAggregatingTask = true
+}
+
+dependencies {
+
+    //Domain and Data layers
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
+
+    //Android
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0'
+
+    //Test
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
+
+
+
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-compiler:2.38.1"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+
+
+    //Fragment and Activity KTX
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+
+    //Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
+
+
+}

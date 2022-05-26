@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Album Interview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_common">Une erreur est survenue</string>
+    <string name="no_data_available">Oups, on dirait qu\'il n\'y a rien ici ...</string>
 </resources>
